@@ -1,26 +1,100 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
+import Button from './components/Button';
+import Input from './components/Input';
 import './App.css';
+import ClearButton from './components/ClearButton';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      input: '',
+      previousNumber: '',
+      currentNumber: '',
+      operator: ''
+    }
+  }
+
+  addToInput = val => {
+    this.setState({ input: this.state.input + val });
+  }
+
+  addZeroToInput = val => {
+    if (this.state.input !== "") this.setState({ input: this.state.input + val });
+  }
+
+  clearInput = () => this.setState({input:''});
+
+  addDecimo = (val) => {
+    if(this.state.input.indexOf('.') === -1) this.setState({input: this.state.input + val})
+  }
+
+  add = () => {
+    this.setState({previousNumber : this.state.input});
+    this.setState({input: ''});
+    this.setState({operator : 'plus'});
+  }
+
+  subtract = () => {
+    this.setState({previousNumber : this.state.input});
+    this.setState({input: ''});
+    this.setState({operator : 'subtract'});
+  }
+
+  evaluate = () => {
+    console.log(this.state);
+    this.state.currentNumber = this.state.input;
+    if (this.state.operator === 'plus') {
+      this.setState({
+        input: parseInt(this.state.previousNumber) + parseInt(this.state.currentNumber)
+      });
+    } else if (this.state.operator === 'subtract') {
+      this.setState({
+        input: parseInt(this.state.previousNumber) - parseInt(this.state.currentNumber)
+      });
+    }
+  }
+
+  render() {
+    return (
+      <div className="App">
+        <div className="calc-wrapper">
+          <div className="row">
+            <Input>{this.state.input}</Input>
+          </div>
+          <div className="row">
+            <Button handleClick={this.addToInput}>7</Button>
+            <Button handleClick={this.addToInput}>8</Button>
+            <Button handleClick={this.addToInput}>9</Button>
+            <Button>/</Button>
+          </div>
+          <div className="row">
+            <Button handleClick={this.addToInput}>4</Button>
+            <Button handleClick={this.addToInput}>5</Button>
+            <Button handleClick={this.addToInput}>6</Button>
+            <Button>*</Button>
+          </div>
+          <div className="row">
+            <Button handleClick={this.addToInput}>1</Button>
+            <Button handleClick={this.addToInput}>2</Button>
+            <Button handleClick={this.addToInput}>3</Button>
+            <Button handleClick={this.add}>+</Button>
+          </div>
+          <div className="row">
+            <Button handleClick={this.addDecimo}>.</Button>
+            <Button handleClick={this.addZeroToInput}>0</Button>
+            <Button handleClick={this.evaluate}>=</Button>
+            <Button>-</Button>
+          </div>
+          <div className="row">
+            <ClearButton handleClick={this.clearInput}>Clear</ClearButton>
+          </div>
+        </div>
+      </div>
+    );
+  }
 }
 
 export default App;
